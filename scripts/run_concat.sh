@@ -1,19 +1,197 @@
 BASEDIR=$( pwd )
- 
-echo 3 Frogs - MT, extract
-python $BASEDIR/scripts/combine_elution_group.py threefrogs euNOG identified_elutions/hymbo/Hymeno_raw_wide_elution_hymbo_euNOG.csv identified_elutions/xenla/Xla_raw_wide_elution_xenla_euNOG.csv identified_elutions/xentr/Xtr_raw_wide_elution_xentr_euNOG.csv
 
-echo 2 Frogs - spindles
-python $BASEDIR/scripts/combine_elution_group.py twofrogs euNOG identified_elutions/xenla/laevisspindles_raw_wide_elution_xenla_euNOG.csv identified_elutions/xentr/tropspindles_raw_wide_elution_xentr_euNOG.csv
+cd $BASEDIR/orthology_elutions
 
 
-echo 3 Frogs - MT, extract, veNOG
-python $BASEDIR/scripts/combine_elution_group.py threefrogs veNOG identified_elutions/hymbo/Hymeno_raw_wide_elution_hymbo_veNOG.csv identified_elutions/xenla/Xla_raw_wide_elution_xenla_veNOG.csv identified_elutions/xentr/Xtr_raw_wide_elution_xentr_veNOG.csv
-
-echo 3 Frogs - MT, extract, veNOG
-python $BASEDIR/scripts/combine_elution_group.py threefrogs_hymxtr veNOG identified_elutions/hymbo_xentr/Hymeno_raw_wide_elution_hymbo_xentr_veNOG.csv identified_elutions/xenla/Xla_raw_wide_elution_xenla_veNOG.csv identified_elutions/xentr/Xtr_raw_wide_elution_xentr_veNOG.csv
+#Data freeze 5.8.17
 
 
-echo 2 Frogs - spindles, veNOG
-python $BASEDIR/scripts/combine_elution_group.py twofrogs veNOG identified_elutions/xenla/laevisspindles_raw_wide_elution_xenla_veNOG.csv identified_elutions/xentr/tropspindles_raw_wide_elution_xentr_veNOG.csv
+
+#7 arath
+arathsprout_wwc=Arabidopsis_sprouts_WWC_2017_raw_wide_elution_arath_euNOG.csv
+arathsprout_sec=OP_Arabidopsis_sproutsSEC_02102017_raw_wide_elution_arath_euNOG.csv
+arathdark_iex1=At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv
+arathdark_iex2=At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv
+arathlight_iex1=At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv
+arathlight_iex2=At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv
+arathseed_iex=OP_Arabidopsis_mutantseed_20170323_raw_wide_elution_arath_euNOG.csv
+
+#4 braol
+braolnuc_wwc=BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv
+braolnuc_sec=Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv
+braolnuc_ief=Broccolinuclei_IEF_9-2016_raw_wide_elution_braol_euNOG.csv
+braolleaf_iex=OP_Broccoli_leaf_IEX2_20170317_raw_wide_elution_braol_euNOG.csv
+
+#3 chlre
+chlre_wwc=Chlamydomonas_WWC_9-2016_raw_wide_elution_chlre_euNOG.csv
+chlre_sec=OP_Chlamydomonas_SEC_raw_wide_elution_chlre_euNOG.csv
+chlrenuc_sec=OP_Chlamy_Nuclei_SEC_20170428_raw_wide_elution_chlre_euNOG.csv
+
+#3 orysj
+orysj_iex1=Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv
+orysj_sec=RiceLeaf_SEC_04292016_raw_wide_elution_orysj_euNOG.csv
+orysj_iex2=RiceL_IEX_raw_wide_elution_orysj_euNOG.csv
+
+#2 selml
+selml_sec=OP_SelaginellaSEC_20160309_raw_wide_elution_selml_euNOG.csv
+selml_wwc=selaginella_WWC_raw_wide_elution_selml_euNOG.csv
+
+#5 wheat
+traesgrass_sec=OP_WheatGrassSEC_20170202_raw_wide_elution_traes_euNOG.csv
+traesgerm_ief=wgIEF_raw_wide_elution_traes_euNOG.csv
+traesgerm_sec1=wgSEC1_raw_wide_elution_traes_euNOG.csv
+traesgerm_iex=wheatgermIEX_raw_wide_elution_traes_euNOG.csv
+traesgerm_sec2=WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv 
+
+
+arath_exps="$arathsprout_wwc $arathsprout_sec $arathdark_iex1 $arathdark_iex2 $arathlight_iex1 $arathlight_iex2 $arathseed_iex"
+braol_exps="$braolnuc_wwc $braolnuc_sec $braolnuc_ief $braolleaf_iex"
+chlre_exps="$chlre_wwc $chlre_sec $chlrenuc_sec"
+orysj_exps="$orysj_iex1 $orysj_iex2 $orysj_sec"
+selml_exps="$selml_sec $selml_wwc"
+traes_exps="$traesgrass_sec $traesgerm_ief $traesgerm_sec1 $traesgerm_iex $traesgerm_sec2"
+
+echo 7 $arath_exps
+echo 4 $braol_exps
+echo 3 $chlre_exps
+echo 3 $orysj_exps
+echo 2 $selml_exps
+echo 5 $traes_exps
+
+
+echo "Combining species elutions"
+
+python $BASEDIR/scripts/combine_elution_group.py arath euNOG $arath_exps
+
+python $BASEDIR/scripts/combine_elution_group.py braol euNOG $braol_exps
+
+python $BASEDIR/scripts/combine_elution_group.py chlre euNOG $chlre_exps
+
+python $BASEDIR/scripts/combine_elution_group.py orysj euNOG $orysj_exps
+
+python $BASEDIR/scripts/combine_elution_group.py selml euNOG $selml_exps
+
+python $BASEDIR/scripts/combine_elution_group.py traes euNOG $traes_exps
+
+
+
+#python $BASEDIR/scripts/combine_elution_group.py arath euNOG $arathsprout_wwc $arathsprout_sec $arathdark_iex1 $arathdark_iex2 $arathlight_iex1 $arathlight_iex2 $arathseed_iex
+
+#python $BASEDIR/scripts/combine_elution_group.py braol euNOG $braolnuc_wwc $braolnuc_sec $braolnuc_ief $braolleaf_iex
+
+#python $BASEDIR/scripts/combine_elution_group.py chlre euNOG $chlre_wwc $chlre_sec $chlrenuc_sec
+
+#python $BASEDIR/scripts/combine_elution_group.py orysj euNOG $orysj_iex1 $orysj_iex2 $orysj_sec
+
+#python $BASEDIR/scripts/combine_elution_group.py selml euNOG $selml_sec $selml_wwc
+
+#python $BASEDIR/scripts/combine_elution_group.py traes euNOG $traesgrass_sec $traesgerm_ief $traesgerm_sec1 $traesgerm_iex $traesgerm_sec2
+
+
+echo "combining hierachies"
+
+python $BASEDIR/scripts/combine_elution_group.py monocot euNOG traes_euNOG_concat.csv orysj_euNOG_concat.csv
+
+python $BASEDIR/scripts/combine_elution_group.py eudicot euNOG arath_euNOG_concat.csv braol_euNOG_concat.csv
+
+
+python $BASEDIR/scripts/combine_elution_group.py angiosperm euNOG monocot_euNOG_concat.csv eudicot_euNOG_concat.csv
+
+python $BASEDIR/scripts/combine_elution_group.py vascular euNOG angiosperm_euNOG_concat.csv selml_euNOG_concat.csv
+
+
+python $BASEDIR/scripts/combine_elution_group.py plants euNOG vascular_euNOG_concat.csv chlre_euNOG_concat.csv
+
+#python $BASEDIR/scripts/combine_elution_group.py traes euNOG wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv wgIEF_raw_wide_elution_traes_euNOG.csv
+#
+#echo 2 selaginella
+#python $BASEDIR/scripts/combine_elution_group.py selml euNOG OP_SelaginellaSEC_20160309_raw_wide_elution_selml_euNOG.csv selaginella_WWC_raw_wide_elution_selml_euNOG.csv
+#
+#
+#echo 4 arath
+#python $BASEDIR/scripts/combine_elution_group.py arath euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv
+#
+#
+#echo orysj
+#echo 2 orysj
+#python $BASEDIR/scripts/combine_elution_group.py orysj euNOG RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv
+#
+#
+#
+#echo broccoli euNOG
+#echo 3 braol
+#python $BASEDIR/scripts/combine_elution_group.py braol euNOG Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv Broccolinuclei_IEF_9-2016_raw_wide_elution_braol_euNOG.csv
+#
+#
+#echo chlamydomonas
+#echo 2 chlre
+#python $BASEDIR/scripts/combine_elution_group.py chlre euNOG Chlamydomonas_WWC_9-2016_raw_wide_elution_chlre_euNOG.csv OP_Chlamydomonas_SEC_raw_wide_elution_chlre_euNOG.csv
+#
+#
+#
+#echo monocot
+#echo 4 traes 2 orysj
+#python $BASEDIR/scripts/combine_elution_group.py monocot euNOG wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv  wgIEF_raw_wide_elution_traes_euNOG.csv RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv
+#
+#
+#echo eudicot
+#echo 4 arath 3 braol
+#python $BASEDIR/scripts/combine_elution_group.py eudicot euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv Broccolinuclei_IEF_9-2016_raw_wide_elution_braol_euNOG.csv
+#
+#
+#
+#echo angiosperm
+#echo 4 traes 2 orysj  4 arath 3 braol
+#
+#python $BASEDIR/scripts/combine_elution_group.py angiosperm euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv  wgIEF_raw_wide_elution_traes_euNOG.csv RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv Broccolinuclei_IEF_9-2016_raw_wide_elution_braol_euNOG.csv
+#
+#
+#echo vascular
+#echo 4 traes 2 orysj  4 arath 3 braol 2 selml
+#python $BASEDIR/scripts/combine_elution_group.py vascular euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv  wgIEF_raw_wide_elution_traes_euNOG.csv RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv Broccolinuclei_IEF_9-2016_raw_wide_elution_braol_euNOG.csv OP_SelaginellaSEC_20160309_raw_wide_elution_selml_euNOG.csv selaginella_WWC_raw_wide_elution_selml_euNOG.csv 
+#
+#echo plants
+#echo 4 traes 2 orysj  4 arath 3 braol 2 selml 2 chlre
+#python $BASEDIR/scripts/combine_elution_group.py plants euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv  wgIEF_raw_wide_elution_traes_euNOG.csv RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv Broccolinuclei_IEF_9-2016_raw_wide_elution_braol_euNOG.csv OP_SelaginellaSEC_20160309_raw_wide_elution_selml_euNOG.csv selaginella_WWC_raw_wide_elution_selml_euNOG.csv Chlamydomonas_WWC_9-2016_raw_wide_elution_chlre_euNOG.csv OP_Chlamydomonas_SEC_raw_wide_elution_chlre_euNOG.csv
+#
+#
+#
+#
+
+#Combine rice experiments
+#echo "orysj"
+#python $BASEDIR/scripts/combine_elution_group.py orysj euNOG RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv
+
+
+#
+#Combine all experiments
+#echo "arathtraesorysjbraolselml"
+#python $BASEDIR/scripts/combine_elution_group.py atobs euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.csv wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv  wgIEF_raw_wide_elution_traes_euNOG.csv RiceL_IEX_raw_wide_elution_orysj_euNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_euNOG.csv Broccolinuclei_6-2016_raw_wide_elution_braol_euNOG.csv BroccoliNE_WWC_raw_wide_elution_braol_euNOG.csv OP_SelaginellaSEC_20160309_raw_wide_elution_selml_euNOG.csv selaginella_WWC_raw_wide_elution_selml_euNOG.csv 
+
+
+#This needs to be run when the traes experiments process for virNOGs
+#echo "arathtraesorysjbraolselml"
+#python $BASEDIR/scripts/combine_elution_wide.py arathtraesorysjbraolselml virNOG At_Col_0_indark_201505_raw_wide_elution_arath_virNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_virNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_virNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_virNOG.csv wgSEC1_raw_wide_elution_traes_virNOG.csv wheatgermIEX_raw_wide_elution_traes_virNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_virNOG.csv RiceL_IEX_raw_wide_elution_orysj_virNOG.csv Rice_201505_uniprot_raw_wide_elution_orysj_virNOG.csv Broccolinuclei_6-2016_raw_wide_elution_braol_virNOG.csv OP_SelaginellaSEC_20160309_raw_wide_elution_selml_virNOG.csv
+
+
+
+
+
+#echo "arath euNOG concatenation"
+#python $BASEDIR/scripts/combine_elution_euNOG.py arath euNOG At_Col_0_indark_201505_raw_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_raw_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_raw_wide_elution_arath_euNOG.cs
+
+#echo "wheat euNOG concatenation"
+#python $BASEDIR/scripts/combine_elution_group.py traes euNOG wgSEC1_raw_wide_elution_traes_euNOG.csv wheatgermIEX_raw_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_raw_wide_elution_traes_euNOG.csv wgIEF_raw_wide_elution_traes_euNOG.csv
+
+#echo "selaginella euNOG concatenation"
+#python $BASEDIR/scripts/combine_elution_group.py selml euNOG OP_SelaginellaSEC_20160309_raw_wide_elution_selml_euNOG.csv selaginella_WWC_raw_wide_elution_selml_euNOG.csv
+#pwd
+#cd arath/
+#echo "arath euNOG concatenation"
+#python $BASEDIR/scripts/combine_elution_multirow.py arathmultirow_euNOG_concat.csv At_Col_0_indark_201505_multirow_wide_elution_arath_euNOG.csv At_Col_0_indark_fraction_201504_multirow_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2014_multirow_wide_elution_arath_euNOG.csv At_Col_0_leaf_fraction_2015_multirow_wide_elution_arath_euNOG.csv
+
+#cd ../traes
+
+#echo "wheat euNOG concatenation"
+#python $BASEDIR/scripts/combine_elution_multirow.py traesmultirow_euNOG_concat.csv wgSEC1_multirow_wide_elution_traes_euNOG.csv wheatgermIEX_multirow_wide_elution_traes_euNOG.csv WheatGermSEC_07-2015_multirow_wide_elution_traes_euNOG.csv
 

@@ -1,15 +1,17 @@
 from __future__ import print_function
 import pandas as pd
-import sys
 import argparse
 
+# This is an all purpose script for annotating table with new columns
+# 
+#
 
 def make_labels(annotation, infile, outfile, join_on, sep1, sep2, suffix, outfile_sep, target_col):
 
    #output from get_elution_ids.py
   
    annot=pd.read_csv(annotation, index_col=False, sep=sep1)
-   #print annot 
+   print(annot) 
 
    annot = annot.set_index([join_on])
 
@@ -18,7 +20,7 @@ def make_labels(annotation, infile, outfile, join_on, sep1, sep2, suffix, outfil
 
 
    prof = pd.read_csv(infile, index_col=False, sep=sep2)
-   #print prof
+   print(prof)
    prof = prof.set_index([join_on])
 
 
@@ -36,13 +38,13 @@ parser.add_argument('join_on', action="store", type=str, help="common colname to
 parser.add_argument('sep1', action="store", type=str, help="sep for annot file")
 parser.add_argument('sep2', action="store", type=str, help="sep for target")
 parser.add_argument('--suffix', action="store", type=str, default = "_annot", required=False, help="If annotation and infiles have common header names, requires suffix to join")
-parser.add_argument('--outfile_sep', action="store", type=str, default="," required=False, help="Separator for the created annotated file")
-parser.add_argument('--target_col', action="store", dest="target_col",  required=False, default=None)
+parser.add_argument('--outfile_sep', action="store", type=str, default=",", required=False, help="Separator for the created annotated file")
+parser.add_argument('--target_col', action="store", dest="target_col",  required=False, default=None, help="designate a specific column to full from annotation file")
 
 
 inputs = parser.parse_args()
 
-make_labels(inputs.annotation_file, inputs.input_file, inputs.outfile, inputs.join_on, inputs.sep1, inputs.sep2, inputs.suffix, inputs.outfile_sep, inputs.target_col)
+make_labels(inputs.annotation_file, inputs.infile, inputs.outfile, inputs.join_on, inputs.sep1, inputs.sep2, inputs.suffix, inputs.outfile_sep, inputs.target_col)
 
 
 
