@@ -100,10 +100,11 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
     print(msg)
 
     ident_group = output_dir + "unique_peptides_" + species + "_" + level + ".csv"
+
+    final_group_pep = final_group_pep.reset_index()
     final_group_pep.to_csv(ident_group, index=False)
         
 
-    final_group_pep = final_group_pep.reset_index()
     #final_group_pep = final_group_pep.set_index(['Peptide'])
 
     return final_group_pep
@@ -133,6 +134,7 @@ if __name__ == "__main__":
     #returns peps, contam_list, frac
     
     final_grouped_peps = define_grouping(peps, inputs.species_code, inputs.phylogenetic_level, inputs.output_dir, inputs.grouping_file)  
+   
     
     print(final_grouped_peps)
     

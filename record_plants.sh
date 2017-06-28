@@ -68,7 +68,7 @@ python scripts/define_grouping.py --spec mouse --grouping_type protein  --peptid
 python scripts/define_grouping.py --spec mouse --grouping_type euNOG --grouping eggnog_mapper/mouse_uniprot.fasta.emapper.annotations.euNOGmapping  --peptides proteomes/mouse/uniprot-proteome%3AUP000009168_peptides.csv --output_dir proteomes/mouse/
 
 
-python scripts/define_grouping.py --spec human --grouping_type protein  --peptides proteomes/human/uniprot-proteome%3AUP000009168_peptides.csv --output_dir proteomes/human/
+python scripts/define_grouping.py --spec human --grouping_type protein  --peptides proteomes/human/uniprot-proteome_human_reviewed_peptides.csv --output_dir proteomes/human/
 python scripts/define_grouping.py --spec human --grouping_type euNOG --grouping eggnog_mapper/human_uniprot.fasta.emapper.annotations.euNOGmapping  --peptides proteomes/human/uniprot-proteome%3AUP000009168_peptides.csv --output_dir proteomes/human/
 
 
@@ -99,6 +99,24 @@ python scripts/define_grouping.py --spec drome --grouping_type euNOG --grouping 
 #bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/OP_SeaUrchinSperm_WWC_20160119/msblender OP_SeaUrchinSperm_WWC_20160119 elutions/ 
 #bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/OP_Chlamy_Nuclei_SEC_20170428/output OP_Chlamy_Nuclei_SEC_20170428 elutions/ 
 #bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/OP_Quinoa_IEX_20170513/output OP_Quinoa_IEX_20170513 elutions/ 
+
+#bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/OP_Tetrahymena_bodies_IEX_20170619/output OP_Tetrahymena_bodies_IEX_20170619 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_IEX_control_011217/output Anna_HEK293T_IEX_control_011217 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_IEX_mixed_bed_control_042217/output Anna_HEK293T_IEX_mixed_bed_control_042217 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_IEX_mixed_bed_RNASE_050117/output Anna_HEK293T_IEX_mixed_bed_RNASE_050117 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_IEX_RNaseA_012517/output Anna_HEK293T_IEX_RNaseA_012517 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_SEC_Benzonase_121316/output Anna_HEK293T_SEC_Benzonase_121316 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_SEC_control_113016/output Anna_HEK293T_SEC_control_113016 elutions/ 
+
+bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/Anna_HEK293T_SEC_RNaseA_120916/output Anna_HEK293T_SEC_RNaseA_120916 elutions/ 
+
+
 
 #bash scripts/consolidate_MSblender_output.sh /MS/processed/Fusion_data/OP_Tomato_leaf_IEX2_201270607/output OP_Tomato_leaf_IEX2_201270607 elutions/ 
 
@@ -174,20 +192,38 @@ python scripts/define_grouping.py --spec drome --grouping_type euNOG --grouping 
 #
 ##mkdir identified_elutions/tetts
 #
-##for exp in OP_Tetrahymena_cilia_IEX_20170609
-#do
-    #echo protein lookup $exp
+
+for exp in Anna_HEK293T_IEX_control_011217 #Anna_HEK293T_IEX_mixed_bed_control_042217 Anna_HEK293T_IEX_mixed_bed_RNASE_050117 Anna_HEK293T_IEX_RNaseA_012517 Anna_HEK293T_SEC_Benzonase_121316 Anna_HEK293T_SEC_control_113016  Anna_HEK293T_SEC_RNaseA_120916
+do
+   echo protein lookup $exp
+
+   python scripts/get_elution_profiles.py human protein $exp elutions/${exp}_elution.csv proteomes/human/unique_peptides_human_protein.csv proteomes/contam/contam_benzo_peptides.csv
+   python scripts/get_wideform_prot.py identified_elutions/human/${exp}_elution_human_protein.csv
+
+done
+
+
+
+
+
+
+
+
+
+for exp in OP_Tetrahymena_bodies_IEX_20170619 #OP_Tetrahymena_cilia_IEX_20170609
+do
+    echo protein lookup $exp
 
    #python scripts/get_elution_profiles.py tetts protein $exp elutions/${exp}_elution.csv proteomes/tetts/unique_peptides_tetts_protein.csv proteomes/contam/contam_benzo_peptides.csv
    #python scripts/get_wideform_prot.py identified_elutions/tetts/${exp}_elution_tetts_protein.csv
 
-   #echo grouped lookup $exp
+   echo grouped lookup $exp
    #python scripts/get_elution_profiles.py tetts euNOG $exp elutions/${exp}_elution.csv proteomes/tetts/unique_peptides_tetts_euNOG.csv proteomes/contam/contam_benzo_peptides.csv
 
-   #python scripts/get_wideform_group.py identified_elutions/tetts/${exp}_elution_tetts_euNOG.csv eggnog_mapper/uniprot_proteome_tetts_UP000009168.fasta.emapper.annotations.euNOGmapping annotation_files/all_annotations.csv
+   python scripts/get_wideform_group.py identified_elutions/tetts/${exp}_elution_tetts_euNOG.csv eggnog_mapper/tetts_diamond_euk.emapper.annotations.euNOG.mapping annotation_files/all_annotations.csv
 
 
-#done
+done
 
 
 #mkdir identified_elutions/lytva
