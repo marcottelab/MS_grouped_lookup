@@ -2,9 +2,11 @@
     this is an in silico trypsin digestion program. The input is a fasta file which contains protein sequence to be digested, the output is a txt file which contains all trypsin digested peptides and corresponding protein accessions.
 
 From https://github.com/yafeng/trypsin/blob/master/trypsin.py
-Modified by Claire McWhite 5/13/2016 to make csvs
+Modified by Claire McWhite 5/13/2016 
 '''
-
+from __future__ import print_function
+from Bio import SeqIO
+import argparse
 def TRYPSIN(proseq,miss_cleavage):
     peptides=[]
     cut_sites=[0]
@@ -45,39 +47,35 @@ def TRYPSIN(proseq,miss_cleavage):
     final_peptides = [i for i in peptides if len(i)>=6 and len(i)<=60]
     return final_peptides
 
-import sys
-import os
-import getopt
-from Bio import SeqIO
-
-if __name__ == "__main__":
-    
-    ################  Comand-line arguments ################
-    if len(sys.argv[1:])<=1:  ### Indicates that there are insufficient number of command-line arguments
-        print "Warning! wrong command, please read the mannual in Readme.txt."
-        print "Example: python trypsin.py --input input_filename --output output_filename --miss 1"
-    else:
-        options, remainder = getopt.getopt(sys.argv[1:],'', ['input=',
-                                                             'miss=',
-                                                             'output='])
-        for opt, arg in options:
-            if opt == '--input': input_file=arg
-            elif opt == '--miss': n=int(arg)  #number of miss cleavage allowed
-            elif opt == '--output':output_file=arg
-            else:
-                print "Warning! Command-line argument: %s not recognized. Exiting..." % opt; sys.exit()
-    
-    handle=SeqIO.parse(input_file,'fasta')
+def process_fasta(input_file, miss, output_file): 
+    handle=SeqIO.parse(args.input_file,'fasta')
     output=open(output_file,'w')
     
     output.write("%s,%s\n" % ("ProteinID","Peptide"))
     
     for record in handle:
         proseq=str(record.seq)
-        peptide_list=TRYPSIN(proseq,n)
+        peptide_list=TRYPSIN(proseq,miss)
         for peptide in peptide_list:
             output.write("%s,%s\n" % (record.id,peptide))
     
     handle.close()
     output.close()
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Break a fasta into canonical and readthrough DNA/protein/peptides')
+
     
+    parser.add_argument('-i', '--input_file', dest='input_file', action="store", required=True, type=str, help= 'Input fasta')
+
+    parser.add_argument('-m', '--miss', dest='miss', action="store", default = 2, type=int, help= 'Number of missed cleavages. Default 2')
+
+    parser.add_argument('-o', '--output_file', dest= 'output_file', action="store", type=str, help= 'Output file for peptides')
+
+
+    args = parser.parse_args()
+
+    process_fasta(args.input_file, args.miss, args.output_file)
+   

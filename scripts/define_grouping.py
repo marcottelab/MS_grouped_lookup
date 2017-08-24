@@ -35,8 +35,8 @@ def protein_uniq_peptides(peps, species, output_dir=''):
     print(msg)
     #formerly identifying_orthogroup
     ident_group = output_dir + "protein_unique_peptides_" + species + ".csv"
-    final_pep.to_csv(ident_group, index=False)
     final_pep=final_pep.reset_index()
+    final_pep.to_csv(ident_group, index=False)
     #final_pep = final_pep.set_index(['Peptide'])
 
     return final_pep
@@ -59,15 +59,19 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
         prot = prot.set_index(['ProteinID']) 
         
         #Join the grouped proteins to their list of peptides
-        group_pep = prot.join(peps, how = "left")
+        #Change to outer
+        group_pep = prot.join(peps, how = "outer")
     
         #This will be the same for every experiment
         group_pep = group_pep.reset_index()
+
+        group_pep['ID'] = group_pep['ID'].fillna(group_pep['ProteinID'])
     
         #Mapping of groups to peptides with proteins. No uniqueness criteria
-        group_prot_pep_filename = output_dir + "group_prop_pep_" + species + "_" + level + ".csv"
+        group_prot_pep_filename = output_dir + "group_prot_pep_" + species + "_" + level + ".csv"
     
         group_pep_cols = ['ID', 'ProteinID', 'Peptide']
+
         
         group_pep = group_pep[group_pep_cols]
     
@@ -75,15 +79,16 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
      
         group_pep.to_csv(group_prot_pep_filename, index=False)
         
-        #These are the only columns we need for the next step
-        group_pep_cols = ['ID', 'Peptide']
+
         
-        group_pep = group_pep[group_pep_cols]
-            
+
+        #These are the only columns we need for the next step
         #print(group_pep)
+        group_pep = group_pep[['ID', 'Peptide']]
     else:
         group_pep = peps
-       
+        group_pep = group_pep.reset_index()
+      
     #Get unique Rows, as one peptide can occur multiple times in one group
     print("get unique rows so no duplicate peptides in a group")
     uniq_group_pep = group_pep.drop_duplicates()
@@ -101,7 +106,7 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
 
     ident_group = output_dir + "unique_peptides_" + species + "_" + level + ".csv"
 
-    final_group_pep = final_group_pep.reset_index()
+    #final_group_pep = final_group_pep.reset_index()
     final_group_pep.to_csv(ident_group, index=False)
         
 
