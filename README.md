@@ -17,9 +17,8 @@ This is a folder for looking up peptides from fractionation-MS experiments using
 
 
 3. Get protein-unique peptides
-    ```{bash}
+    
     $ python scripts/define_grouping.py --spec human --grouping_type protein  --peptides proteomes/human/working_proteome/uniprot-proteome_human_reviewed_peptides.csv --output_dir proteomes/human/working_proteome/
-    ```
 
 
 4. Get group-unique peptides
