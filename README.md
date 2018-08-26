@@ -24,26 +24,8 @@ One part of a larger scheme that goes:
     $ nohup python /project/eggnog-mapper-0.99.2/emapper.py -i /project/cmcwhite/orthology_proteomics/proteomes/human/uniprot-reviewed%3Ayes+AND+proteome%3Aup000005640.fasta --output human_hmmer_euNOG -d euNOG --override --scratch_dir /project/cmcwhite/orthology_proteomics/proteomes/human/ -m hmmer --output_dir /project/cmcwhite/orthology_proteomics/eggnog_mapper  &> /project/cmcwhite/orthology_proteomics/logs/nohup_human_euNOG.txt &
 
 
-    Instead, break up the proteome into chunks and process in parallel
-
-    Make a file with the species ID of one or more species
-   
-    spec_list.txt
-        human
-        mouse
-
-    This script currently assumes a proteomes directory structure of 
-       /proteomes/[speciesID]/working_proteome/[single fasta]
-
-    Break up a proteome and create a list of commands for each chunk
-    $ bash scripts/create_emapper_commands.sh spec_list.txt /project/eggnog-mapper-0.99.2/emapper.py euNOG hmmer        
-    Run each command in parallel
-    $ cat human_euNOG_hmmer_COMMANDS.txt | parallel -j10
-
-    Combine the outputs
-    $ cat proteomes/human/output/*emapper.annotations > eggnog_mapper/human_hmmer_euNOG.emapper.annotations
-
-
+    Alternatively, break up the proteome into chunks and process in parallel using proteome_breaker.py
+    
     The output from the eggnog mapper need to be formatted 
     $ format_emapper_output.R -f human_hmmer_euNOG.emapper.annotations -o human_hmmer_euNOG.mapping -s hmmer -l euNOG
 
@@ -58,10 +40,6 @@ One part of a larger scheme that goes:
    $ python scripts/trypsin.py --input proteomes/human/uniprot-proteome%3AUP000005640.fasta  --output  proteomes/human/uniprot-proteome%3AUP000005640_peptides.csv --miss 2
 
 
-**3. Get protein-unique peptides**
-    Identify proteins from peptides that are unique to single proteins
-    
-    $ python scripts/define_grouping.py --spec human --grouping_type protein  --peptides proteomes/human/working_proteome/uniprot-proteome_human_reviewed_peptides.csv --output_dir proteomes/human/working_proteome/
 
 
 **4. Get group-unique peptides**
@@ -71,7 +49,7 @@ One part of a larger scheme that goes:
    
 
 
-### Identify proteins in an experiment
+#### Identify proteins in an experiment
 
 **1. Consolidate identified peptides from multiple experiments into a single file**
   
@@ -100,7 +78,10 @@ One part of a larger scheme that goes:
 
    These formatted files are stored in the elutions/ folder
 
-    
+
+
+
+#Don't do by proteins. Use weighted peptide output instead   
 **2. Lookup peptides by protein**
 
 
@@ -130,9 +111,14 @@ One part of a larger scheme that goes:
 
 
 
+
+
 **3. Lookup peptides according to a grouping of proteins**
 
-
+**3. Get protein-unique peptides**
+    Identify proteins from peptides that are unique to single proteins
+    
+    $ python scripts/define_grouping.py --spec human --grouping_type protein  --peptides proteomes/human/working_proteome/uniprot-proteome_human_reviewed_peptides.csv --output_dir proteomes/human/working_proteome/
 
    $ python scripts/get_elution_profiles.py human euNOG ExperimentA elutions/ExperimentA_elution.csv proteomes/human/working_proteome/unique_peptides_human_euNOG.csv proteomes/contam/contam_benzo_peptides.csv
 
