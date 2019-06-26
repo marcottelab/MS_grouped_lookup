@@ -11,26 +11,17 @@ def calc_length_factor(peptable):
 
    corrected = peptable_filt.groupby('ID')[['peptidelength']].sum()   
 
-   print(corrected)
    return corrected
 
 
-def parse_args():
+if __name__ == "__main__":
 
-   parser=argparse.ArgumentParser(description = 'Takes a protein-peptide mapping (csv) and calculates peptide length correction factor')
-   parser.add_argument('inputfile', metavar='inputfile', type=str, help = 'Two column ID pepsequences')
-   parser.add_argument('outputfile', metavar='outputfile', type=str, help = 'An output file name')
-   return parser.parse_args()
+    parser=argparse.ArgumentParser(description = 'Takes a protein-peptide mapping of uniquely assigned peptides (csv) and calculates peptide length correction factor')
+    parser.add_argument('--inputfile', dest='inputfile', required = True, type=str, help = 'Two columns named (ID, Peptide)')
+    parser.add_argument('--outputfile', dest='outputfile', required = True,  type=str, help = 'An output file name')
+    args = parser.parse_args()
 
-
-def main():
-     
-    args=parse_args()
- 
     peptable = pd.read_csv(args.inputfile)
-
     corrected = calc_length_factor(peptable)
-
     corrected.to_csv(args.outputfile, header = ["corrected_tryptic_peplength"])
 
-main()

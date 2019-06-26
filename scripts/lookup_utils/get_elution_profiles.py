@@ -31,7 +31,7 @@ def load_elution(elution_file):
     elution_peptides = elution_peptides.reset_index()
     return(elution_peptides)
 
-def load_contaminants(contam_file)
+def load_contaminants(contam_file):
     #Contaminants
     contam = pd.DataFrame(pd.read_csv(contam_file))
     contam['Peptide'] = contam['Peptide'].str.replace('I', 'J')
@@ -47,7 +47,7 @@ def remove_contaminants(elution_peptides, contam_list):
     elution_peptides = elution_peptides.dropna(axis=0, how = 'any')
     return(elution_peptides)
  
-def create_tables(elution_peptides, peptide_lookup, species, level, experiment, output_dir=''):
+def create_tables(elution_peptides, peptide_lookup, output_basename):
     '''
     Match identified peptides. Creates a table of peptide and protein counts
     '''
@@ -60,7 +60,7 @@ def create_tables(elution_peptides, peptide_lookup, species, level, experiment, 
     elution_peptides_labeled = elution_peptides_labeled.reset_index()
 
     #This is for the peptide splitting project
-    elut_pep_filename =  output_basename  +"_peptide_elution.csv"
+    elut_pep_filename =  output_basename  +"_peps.tidy"
     peptide_protein_fraction = elution_peptides_labeled.to_csv(elut_pep_filename, index=False)
 
     elution_peptides_labeled = elution_peptides_labeled[['ExperimentID', 'FractionID', 'ID', 'PeptideCount']]
@@ -70,29 +70,29 @@ def create_tables(elution_peptides, peptide_lookup, species, level, experiment, 
     
     final_elution =  elution_peptides_labeled.reset_index(name='Total_PeptideCount')
    
-    elut_group = output_basename +"_total_elution.csv"
+    elut_group = output_basename +"_elut.tidy"
     final_elution.to_csv(elut_group, index=False) 
     
 if __name__ == "__main__":
         
         
     parser = argparse.ArgumentParser(description='Interpret mass spec experiments using orthologous groups of proteins to make identifications')
-    parser.add_argument('--elution_file', action="store", type=str, help= 'consolideMSBlender output')
-    parser.add_argument('--peptides_file', action="store", type=str, help= 'csv, two columns, ID, Peptide')
-    parser.add_argument('--output_basename', action="store", type = str, help = 'Start of output filenames')
-    parser.add_argument('--contam_file', action="store", type=str, required = False, help= 'csv, two columns containin peptides to be removed')
+    parser.add_argument('--elution_file', action="store", type=str, required = True, help= 'consolideMSBlender output')
+    parser.add_argument('--peptides_file', action="store", type=str, required = True, help= 'csv, two columns, ID, Peptide')
+    parser.add_argument('--output_basename', action="store", type = str, required = True,  help = 'Start of output filenames')
+    parser.add_argument('--contam_file', action="store", type=str, required = False, help= 'csv, two columns containing peptides to be removed')
     
     args = parser.parse_args()
 
-    peptide_lookup = load_peptide_key(args.peptides_file  
+    peptide_lookup = load_peptide_key(args.peptides_file) 
     elution_peptides = load_elution(args.elution_file)
 
     if args.contam_file:
         contam_list = load_contaminants(args.contam_file)
-        elution_peptides = remove_contaminants(elution_peptides, contam_list):
+        elution_peptides = remove_contaminants(elution_peptides, contam_list)
     
 
-    create_tables(elution_peptides, peptide_lookup, args.output_basename):
+    create_tables(elution_peptides, peptide_lookup, args.output_basename)
 
     
    

@@ -76,20 +76,30 @@ def diploid(fasta_file,  orthology_file, choice):
         newseqs_list = newseqs.to_records()
         outfilename = choice + "_" + fasta_file
 
-        annot_df = pd.read_csv(args.annotation_file, index_col = 0)
-        annot_dict = annot_df.to_dict('index')
+ 
+        if args.annotation_file:
+            annot_df = pd.read_csv(args.annotation_file, index_col = 0)
+            annot_dict = annot_df.to_dict('index')
+
+
         seqs = []
+
         for key, value in newseqs_list:
             #print(key)
             #print(value)
-            try:
-                print(annot_dict[key])
-                              
-                key_annot = key + "|" + str(annot_dict[key]['Annotation'])
+            if args.annotation_file:
 
-            except:
-                key_annot = key
-            record = SeqRecord(Seq(value), key_annot, '', '')
+                try:
+                    print(annot_dict[key])
+                              
+                    key_annot = key + "|" + str(annot_dict[key]['Annotation'])
+
+                except:
+                    key_annot = key
+                record = SeqRecord(Seq(value), key_annot, '', '')
+
+            else:
+                record = SeqRecord(Seq(value, key, '', ''))
 
             seqs.append(record)
 
@@ -104,7 +114,7 @@ parser = argparse.ArgumentParser(description='Returns a group of fasta files wit
 parser.add_argument('fasta_file', action="store", type=str, help="a fasta file to break up")
 parser.add_argument('orthology_file', action="store", type=str, help="a orthology file with a column of  ProteinID and ID")
 parser.add_argument('choice', action="store", type=str, help="random, longest, or concat")
-parser.add_argument('annotation_file', action="store", type=str, help="File with ID and Annotations")
+parser.add_argument('annotation_file', action="store", type=str, required = False, help="File with ID and Annotations")
 args = parser.parse_args()
 
 diploid(args.fasta_file, args.orthology_file, args.choice)

@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import argparse
 
-def format_peptides(peptides_file, species):
+def format_peptides(peptides_file):
     '''
     Read in a ProteinID Peptide mapping file, and format
     '''   
@@ -18,8 +18,8 @@ def format_peptides(peptides_file, species):
      
     return peps
 
-
-def protein_uniq_peptides(peps, species, output_dir=''):
+# Is this ever called?
+def protein_uniq_peptides(peps, output_basename):
     
     #print("Get group unique peptides")   
     peps = peps.reset_index()
@@ -29,7 +29,7 @@ def protein_uniq_peptides(peps, species, output_dir=''):
     #this seems like it's only dropping the second duplicate not both. 
     final_pep = uniq_pep.drop_duplicates(subset=['Peptide'], keep=False) #current Docs/version have subset
     #final_pep = uniq_pep.groupby(["Peptide"]).filter(lambda df:df.shape[0] == 1)
-    ident_group = output_dir + "protein_unique_peptides_" + species + ".csv"
+    ident_group = output_dir + "protein_unique_peptides.csv"
     final_pep=final_pep.reset_index()
     final_pep.to_csv(ident_group, index=False)
     #final_pep = final_pep.set_index(['Peptide'])
@@ -38,7 +38,7 @@ def protein_uniq_peptides(peps, species, output_dir=''):
 
 
    
-def define_grouping(peps, species, level, output_dir='', grouping_file=None):   
+def define_grouping(peps, output_basename, level = 'group', grouping_file=None):   
     '''
     Take a file that tells how to group proteins. 
     Each row should contain one group ID and one protein ID
@@ -46,6 +46,7 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
     '''
     #print("define grouping")
     if grouping_file:
+
         #print("grouping file provided")
         grouping = pd.DataFrame(pd.read_csv(grouping_file, sep="\t", index_col=False))
         #print(prot)
@@ -58,7 +59,6 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
     
         group_pep = group_pep.reset_index()
   
-        #print(group_pep)
         #This accounts for if the protein doesn't have an entry in the mapping
         #Then the groupID becomes the proteinID
         group_pep['ID'] = group_pep['ID'].fillna(group_pep['ProteinID'])
@@ -70,7 +70,7 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
         group_pep = group_pep.sort(['ID']).drop_duplicates()
 
         #Mapping of groups to peptides with proteins. No uniqueness criteria
-        group_prot_pep_filename = output_dir + "all_group_prot_pep_" + species + "_" + level + ".csv"     
+        group_prot_pep_filename = output_basename + "_" + level + "_protein_peps.csv"     
         group_pep.to_csv(group_prot_pep_filename, index=False)
         
 
@@ -92,8 +92,12 @@ def define_grouping(peps, species, level, output_dir='', grouping_file=None):
     final_group_pep = uniq_group_pep.groupby(["Peptide"]).filter(lambda df:df.shape[0] == 1)
     #final_group_pep = final_group_pep.reset_index()
 
-    ident_group = output_dir + "unique_peptides_" + species + "_" + level + ".csv"
+    if grouping_file:
+       ident_group = output_basename + "_" + level + "_unique_peptides.csv"
+    else:
+       ident_group = output_basename + "_protein_unique_peptides.csv"
     final_group_pep.to_csv(ident_group, index=False)
+
         
     return final_group_pep
      
@@ -101,27 +105,19 @@ if __name__ == "__main__":
     
            
     parser = argparse.ArgumentParser(description='Interpret mass spec experiments using orthologous groups of proteins to make identifications')
-    parser.add_argument('--spec', dest='species_code', action="store", type=str, help="species code, ex. human")
-    parser.add_argument('--grouping_type', dest='phylogenetic_level', action="store", type=str, required=False, default='', help="Identifier for the type of grouping")
-    parser.add_argument('--peptides' ,dest='peptides_file', action="store", type=str, help="artificially digested proteome with ProteinID Peptide columns")
-    parser.add_argument('--output_dir' , action="store", type=str, required=False, default="peptide_assignments/")
-    parser.add_argument('--log_dir' , action="store", type=str, required=False, default="logs/")
+    parser.add_argument('--peptides' ,dest='peptides_file', action="store", required = True,  type=str, help="artificially digested proteome with ProteinID Peptide columns")
+    parser.add_argument('--output_basename', action="store", type = str, required = True, help = 'Start of output filenames')
     parser.add_argument('--grouping', dest='grouping_file', action="store", required=False, type=str, help="tab separated with ID ProteinID columns")
-   
+    parser.add_argument('--level', dest='level', action="store", required=False, type=str, help="Identifier to tie output filename to type of goroups, ex. virNOG")
+  
     inputs = parser.parse_args()
-    
-    #print(inputs.species_code)
-    #print(inputs.phylogenetic_level)
-    #print("GROUPING", inputs.grouping_file)
-    #print("OUTPUTLOC", inputs.output_dir)
-    
     
     #Output of trypsin.py
     #Just J replaces I and L 
-    peps  = format_peptides(inputs.peptides_file, inputs.species_code, inputs.output_dir)
+    peps  = format_peptides(inputs.peptides_file)
     #returns peps, contam_list, frac
     
-    final_grouped_peps = define_grouping(peps, inputs.species_code, inputs.phylogenetic_level, inputs.output_dir, inputs.grouping_file)  
+    final_grouped_peps = define_grouping(peps, inputs.output_basename, inputs.level, inputs.grouping_file)  
    
     
     #print(final_grouped_peps)

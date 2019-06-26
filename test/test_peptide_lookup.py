@@ -27,12 +27,12 @@ class TestLookup(unittest.TestCase):
                 self.contam_file = "test/contam_benzo_peptides.csv"
                 self.sample_elution = "test/test_elution.csv"
                 self.peptides = tr.TRYPSIN(self.testprotein, 2)
-                self.peps = dg.format_peptides(self.sample_peptides, 'test')
+                self.peps = dg.format_peptides(self.sample_peptides)
 
-                self.prot_uniq_peps = dg.protein_uniq_peptides(self.peps, 'test', 'test/')
+                self.prot_uniq_peps = dg.protein_uniq_peptides(self.peps, 'output_test')
                 #print("Test define grouping - grouped")
      
-                self.group_uniq_peps = dg.define_grouping(self.peps, 'test', 'euNOG', 'test/', self.sample_orthology)
+                self.group_uniq_peps = dg.define_grouping(self.peps, 'output_test', self.sample_orthology)
 
  
         def testCorrectProtein(self,):
