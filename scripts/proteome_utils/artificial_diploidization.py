@@ -99,7 +99,7 @@ def diploid(fasta_file,  orthology_file, choice):
                 record = SeqRecord(Seq(value), key_annot, '', '')
 
             else:
-                record = SeqRecord(Seq(value, key, '', ''))
+                record = SeqRecord(Seq(value), key, '', '')
 
             seqs.append(record)
 
@@ -111,10 +111,10 @@ def diploid(fasta_file,  orthology_file, choice):
 
 parser = argparse.ArgumentParser(description='Returns a group of fasta files with specified number of sequences each (except for the last file which will likely be short)')
 
-parser.add_argument('fasta_file', action="store", type=str, help="a fasta file to break up")
-parser.add_argument('orthology_file', action="store", type=str, help="a orthology file with a column of  ProteinID and ID")
-parser.add_argument('choice', action="store", type=str, help="random, longest, or concat")
-parser.add_argument('annotation_file', action="store", type=str, required = False, help="File with ID and Annotations")
+parser.add_argument('--fasta_file', '-f',dest = 'fasta_file', action="store", type=str, help="a fasta file to break up")
+parser.add_argument('--orthology_file','-o', dest = 'orthology_file', action="store", type=str, help="a orthology file with a column of  ProteinID and ID")
+parser.add_argument('--choice','-c', dest = 'choice', action="store", type=str, help="random, longest, or concat")
+parser.add_argument('--annotation_file','-a', dest = 'annotation_file', action="store", type=str, required = False, help="File with ID and Annotations")
 args = parser.parse_args()
 
 diploid(args.fasta_file, args.orthology_file, args.choice)
