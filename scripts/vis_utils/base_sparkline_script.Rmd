@@ -1,0 +1,74 @@
+---
+title: "Sparkline"
+output: html_document
+---
+
+### Load this every time
+```{r}
+library(tidyverse)
+library(cowplot)
+
+
+
+theme_sparkline <- function () { 
+    theme_cowplot() %+replace% 
+        theme(
+           axis.text.x = element_blank(), 
+           axis.text.y = element_text(vjust = -1),
+           axis.ticks.x = element_blank(), 
+           axis.line.x = element_blank(),
+           axis.title.x = element_blank(),
+           axis.title.y = element_blank(),
+           
+           panel.spacing = unit(0.1, "lines"),
+           panel.background = element_rect(fill = "white"),
+           plot.background=element_rect(fill="grey90"),
+           strip.background = element_rect(fill = NA, color = "black"),
+           axis.line.y = element_blank(),
+           plot.margin = unit(c(0, 0, 0, 0), "cm")#,
+           #panel.border = element_rect(color = "grey85", fill = NA, linetype = 1, size =0.5)#
+          )
+}
+
+```
+
+
+```{r}
+df <- read_csv("elution.csv")
+
+# Get in tidy format
+df_tidy <- df %>% gather(FractionID, value, -ID)
+
+```
+
+
+```{r}
+sparkline_fxn <- function(df_tidy, selection){
+    df_sel <- df_tidy %>% filter(ID %in% selection) 
+          
+    plt <- ggplot(df_sel, aes( x =FractionID,
+                                    y = ID, 
+                                    height = value, 
+                                    group = ID)) +
+        geom_ridgeline(fill= "orange", scale = 0.9) +
+   
+        scale_y_discrete(expand = c(0,0.02)) +
+       NULL
+    
+       return(plt)
+
+}
+
+
+```
+
+
+
+
+```{r}
+a_complex <- c("A", "B", "C")
+
+sparkline_fxn(df_tidy, a_complex)
+
+```
+
