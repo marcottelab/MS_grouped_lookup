@@ -4,12 +4,12 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 import pandas as pd
 
-def concatenate_seq(fasta, orthology_grouped, limit = True):
+def concatenate_seq(fasta, orthology_grouped, seq_limit):
      print("start concat")
      
      #concatseq = orthology_grouped['seq'].transform(lambda x: 'KKK'.join(x)).drop_duplicates()
-     if limit == True:
-         limitedseq = orthology_grouped.head(3)
+     if seq_limit:
+         limitedseq = orthology_grouped.head(seq_limit)
          orthology_grouped = limitedseq.groupby(['ID'])
  
      
@@ -37,7 +37,7 @@ def random_seq(fasta, orthology_grouped):
 
 
 
-def diploid(fasta_file,  orthology_file, choice):
+def diploid(fasta_file,  orthology_file, choice, seq_limit):
 	#read in proteome
 	proteome = SeqIO.parse(fasta_file, "fasta")
 
@@ -51,11 +51,13 @@ def diploid(fasta_file,  orthology_file, choice):
 
         fasta_table = pd.DataFrame(dict(ProteinID = identifiers, length=lengths, seq = seqs)).set_index(['ProteinID'])
 
+        print(fasta_table.head)
      
         orthology = pd.read_table(orthology_file, index_col=0)
-      
+        print(orthology.head)    
+  
         fasta_orthoannot = fasta_table.join(orthology, how = "left")
-        
+        print(fasta_orthoannot.head)
 
         
         fasta_orthoannot = fasta_orthoannot.reset_index()
@@ -70,7 +72,7 @@ def diploid(fasta_file,  orthology_file, choice):
         elif choice == 'longest':
             newseqs = longest_seq(proteome, orthology_grouped)
         elif choice == 'concat':
-            newseqs = concatenate_seq(proteome, orthology_grouped)
+            newseqs = concatenate_seq(proteome, orthology_grouped, seq_limit)
        
         newseqs = newseqs.set_index(['ID'])
         newseqs_list = newseqs.to_records()
@@ -116,6 +118,8 @@ parser.add_argument('--orthology_file','-o', dest = 'orthology_file', action="st
 parser.add_argument('--choice','-c', dest = 'choice', action="store", type=str, help="random, longest, or concat")
 parser.add_argument('--annotation_file','-a', dest = 'annotation_file', action="store", type=str, required = False, help="File with ID and Annotations")
 args = parser.parse_args()
+parser.add_argument('--seq_limit','-s', dest = 'seq_limit', action="store", type=str, help="random, longest, or concat", required = False)
 
-diploid(args.fasta_file, args.orthology_file, args.choice)
+
+diploid(args.fasta_file, args.orthology_file, args.choice, args.seq_limit)
 	
