@@ -24,12 +24,20 @@ parser$add_argument("-s", "--search_type", action="store", required=TRUE,
 
 parser$add_argument("-l", "--level", action="store",
                         dest="level_sel", default=NULL, help="Output a specific phylogenetic level for diamond search")
-
+parser$add_argument("-v", "--version", action = "store", default=1, help = "emapper version, 1 or 2")
 
 
 args <- parser$parse_args()
 df <- read_delim(args$filename, delim="\t", col_names=FALSE)
-names(df) <- c("ProteinID", "best_prot_match", "prot_match_evalue", "prot_match_bitscore", "predicted_gene_name", "GO_terms", "KEGG_pathways", "Annotation_tax_scope", "Matching_OGs", "hmmer_best", "COG_funcats", "eggNOG_HMM_model_annotation")
+
+if(args$version == 1){
+    names(df) <- c("ProteinID", "best_prot_match", "prot_match_evalue", "prot_match_bitscore", "predicted_gene_name", "GO_terms", "KEGG_pathways", "Annotation_tax_scope", "Matching_OGs", "hmmer_best", "COG_funcats", "eggNOG_HMM_model_annotation")
+}
+
+if(args$version == 2){
+ 
+    names(df) <- c("ProteinID", "seed_eggNOG_ortholog", "seed_ortholog_evalue", "seed_ortholog_score", "Predicted_taxonomic_group", "Predicted_protein_name", "Gene_Ontology_terms", "EC_number", "KEGG_ko", "KEGG_Pathway", "KEGG_Module", "KEGG_Reaction", "KEGG_rclass", "BRITE", "KEGG_TC", "CAZy_", "BiGG_Reaction", "tax_scope", "Matching_OGs", "bestOG", "COG_Functional_Category", "free_text")
+}
 
 
 print(args$output_filename)
@@ -46,8 +54,7 @@ if(args$search_type == "diamond"){
     
     if(!is.null(args$level_sel)){
         df_final <- df_unnest %>% filter(level==args$level_sel)
-
-   
+ 
        
     }
 }
