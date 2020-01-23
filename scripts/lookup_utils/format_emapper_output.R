@@ -26,6 +26,10 @@ parser$add_argument("-l", "--level", action="store",
                         dest="level_sel", default=NULL, help="Output a specific phylogenetic level for diamond search")
 parser$add_argument("-v", "--version", action = "store", default=1, help = "emapper version, 1 or 2")
 
+parser$add_argument("-p", "--prefix", action = "store", default="ENOG41", help = "ENOGXX prefix. Must be added to non-COGXXXX entries. Usually ENOG41 for eukaryotes, but confirm by searching last 5 digits of identifier on eggNOG")
+
+
+
 
 args <- parser$parse_args()
 df <- read_delim(args$filename, delim="\t", col_names=FALSE)
@@ -160,7 +164,8 @@ df_final <- df_final %>% select(ProteinID, ID)
 
 #If the ID starts with a number, assume it needs the ENOG41 prefix. 
 #Add ENOG41 prefix
-df_final <- df_final %>% mutate(ID = gsub(".*(?=^[0-9])", "ENOG41", ID, perl=TRUE))
+
+df_final <- df_final %>% mutate(ID = gsub(".*(?=^[0-9])", args$prefix, ID, perl=TRUE))
 
 print(head(df_final))
 
