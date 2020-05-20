@@ -117,8 +117,8 @@ parser.add_argument('--fasta_file', '-f',dest = 'fasta_file', action="store", ty
 parser.add_argument('--orthology_file','-o', dest = 'orthology_file', action="store", type=str, help="a orthology file with a column of  ProteinID and ID")
 parser.add_argument('--choice','-c', dest = 'choice', action="store", type=str, help="random, longest, or concat")
 parser.add_argument('--annotation_file','-a', dest = 'annotation_file', action="store", type=str, required = False, help="File with ID and Annotations")
-args = parser.parse_args()
 parser.add_argument('--seq_limit','-s', dest = 'seq_limit', action="store", type=str, help="random, longest, or concat", required = False)
+args = parser.parse_args()
 
 
 diploid(args.fasta_file, args.orthology_file, args.choice, args.seq_limit)

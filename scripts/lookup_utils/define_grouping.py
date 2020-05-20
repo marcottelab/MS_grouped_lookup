@@ -67,7 +67,7 @@ def define_grouping(peps, output_basename, level = 'group', grouping_file=None):
         
         group_pep = group_pep[group_pep_cols]
     
-        group_pep = group_pep.sort(['ID']).drop_duplicates()
+        group_pep = group_pep.sort_values(['ID']).drop_duplicates()
 
         #Mapping of groups to peptides with proteins. No uniqueness criteria
         group_prot_pep_filename = output_basename + "_" + level + "_protein_peps.csv"     

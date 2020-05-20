@@ -26,7 +26,8 @@ parser$add_argument("-l", "--level", action="store",
                         dest="level_sel", default=NULL, help="Output a specific phylogenetic level for diamond search")
 parser$add_argument("-v", "--version", action = "store", default=1, help = "emapper version, 1 or 2")
 
-parser$add_argument("-p", "--prefix", action = "store", default="ENOG41", help = "ENOGXX prefix. Must be added to non-COGXXXX entries. Usually ENOG41 for eukaryotes, but confirm by searching last 5 digits of identifier on eggNOG")
+
+parser$add_argument("-p", "--prefix", action = "store", default="ENOG41", help = "ENOGXX prefix. Must be added to non-COGXXXX entries. Usually ENOG41 for eukaryotes, but confirm by searching last 5 digits of identifier on eggNOG. Post eggnog 5.0, eukaryotes begin ENOG50")
 
 
 
