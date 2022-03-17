@@ -17,22 +17,22 @@ def proteome_breaker(fasta_file, numseq, output_dir):
         n = 0
         entry = True
         while entry:
-                print(n)
-        batch = []        
-        while len(batch) < int(numseq):
+            print(n)
+            batch = []        
+            while len(batch) < int(numseq):
                 try:
-                    entry = proteome.next()
+                    entry = next(proteome)
                 except StopIteration:
                     entry = None
                 if entry is None:
-                #End of file
+                   #End of file
                     break
                 batch.append(entry)
-                print(batch)
-        if batch:
+            print(batch)
+            if batch:
                 #SeqIO.write(batch, sys.argv[3]+pid+".scan"+str(n+1)+".fasta", "fasta")
-                SeqIO.write(batch, output_dir + pid+".seg"+str(n+1)+".fasta", "fasta")
-                n+=1	
+                SeqIO.write(batch, output_dir + "/" + pid+".seg"+str(n+1)+".fasta", "fasta")
+            n+=1	
 
 
 parser = argparse.ArgumentParser(description='Returns a group of fasta files with specified number of sequences each (except for the last file which will likely be short)')
