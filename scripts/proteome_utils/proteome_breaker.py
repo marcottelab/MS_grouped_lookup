@@ -17,7 +17,7 @@ def proteome_breaker(fasta_file, numseq, output_dir):
         n = 0
         entry = True
         while entry:
-            print(n)
+            #print(n)
             batch = []        
             while len(batch) < int(numseq):
                 try:
@@ -28,10 +28,11 @@ def proteome_breaker(fasta_file, numseq, output_dir):
                    #End of file
                     break
                 batch.append(entry)
-            print(batch)
+            #print(batch)
             if batch:
                 #SeqIO.write(batch, sys.argv[3]+pid+".scan"+str(n+1)+".fasta", "fasta")
                 SeqIO.write(batch, output_dir + "/" + pid+".seg"+str(n+1)+".fasta", "fasta")
+                print("Batch {} written".format(n))
             n+=1	
 
 
