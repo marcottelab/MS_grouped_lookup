@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(tidyr))
-suppressPackageStartupMessages(library(readr))
-suppressPackageStartupMessages(library("argparse"))
+library(dplyr)
+library(tidyr)
+library(readr)
+library("argparse")
 
 
 #Should rewrite in python
@@ -32,6 +32,8 @@ parser$add_argument("-p", "--prefix", action = "store", default="ENOG41", help =
 
 
 
+
+
 args <- parser$parse_args()
 df <- read_delim(args$filename, delim="\t", col_names=FALSE)
 
@@ -46,6 +48,8 @@ if(args$version == 2){
 
 
 print(args$output_filename)
+print(df)
+
 
 if(args$search_type == "diamond"){
     df_sel <- df %>% select(ProteinID, Matching_OGs)

@@ -9,7 +9,7 @@ def format_peptides(peptides_file):
     '''   
     peps = pd.DataFrame(pd.read_csv(peptides_file)) 
     #print("Peptide file loaded")
-
+    peps = peps[['ProteinID', 'Peptide']]
     #Replace mass undistinguishable isoleucine/leucine with J
     peps['Peptide'] = peps['Peptide'].str.replace('I', 'J')
     peps['Peptide'] = peps['Peptide'].str.replace('L', 'J')
